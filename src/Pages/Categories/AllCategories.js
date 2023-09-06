@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Typography, Table, Button, Space, Input, Pagination, notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, deleteProduct } from '../../../store/slices/ProductsSlice';
+import { fetchCategories, deleteCategory } from '../../store/slices/categoriesSlice/CategoriesActions';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import {SearchOutlined} from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom';
 
-const AllProducts = () => {
-  const products = useSelector((state) => state.products.products);
-  const loading = useSelector((state) => state.products.loading);
+
+const AllCategories = () => {
+  const categories = useSelector((state) => state.categories.categories);
+  const loading = useSelector((state) => state.categories.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const [searchText, setSearchText] = useState('');
@@ -100,34 +101,23 @@ const AllProducts = () => {
 
   const columns = [
     {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
-      ...getColumnSearchProps('title'),
+      title: 'Category ID',
+      dataIndex: '_id',
+      key: '_id',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      ...getColumnSearchProps('name'),
     },
     {
       title: 'Slug',
       dataIndex: 'slug',
       key: 'slug',
       ...getColumnSearchProps('slug'),
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      ...getColumnSearchProps('description'),
       sorter: (a, b) => a.slug.localeCompare(b.slug),
       sortDirections: ['ascend', 'descend'],
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
     },
     {
       title: 'Actions',
@@ -144,65 +134,63 @@ const AllProducts = () => {
       ),
     },
   ];
-
-  const navigate = useNavigate();
+  
+  const navigate=useNavigate();
 
   const handleEdit = (id) => {
-    navigate(`/update-product/${id}`);
+    navigate(`/update-category/${id}`)
   };
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async (id) => {
     try{
-    await dispatch(deleteProduct(productId));
+    await dispatch(deleteCategory(id))
     notification.success({
-      message: 'Product Deleted',
-      description: 'The product has been successfully deleted.'
+      message: 'Category Deleted',
+      description: 'The category has been successfully deleted.'
     })
-    dispatch(fetchProducts());
-  } catch (error) {
-    notification.error({
-      message: 'Error',
-      description: 'An error occurred while deleting the category.',
-    });
+    dispatch(fetchCategories())
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'An error occurred while deleting the category.',
+      });
+    }
   }
-  };
+    const handleAdd=()=>{
+      navigate('/add-category')
+    }
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 3;
 
-  const filteredProducts = products
-    ? products.filter((product) =>
-        searchedColumn ? getColumnSearchProps(searchedColumn).onFilter(searchText, product) : true
-      )
-    : [];
+  const filteredCategories = categories ? categories.filter((category) =>
+  searchedColumn ? getColumnSearchProps(searchedColumn).onFilter(searchText, category) : true
+) : [];
 
-  const paginatedProducts = filteredProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-  const handleAdd=()=>{
-    navigate('/add-product')
-  }
+  const paginatedCategories = filteredCategories.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div>
-      <Typography.Title level={4}>All Products</Typography.Title>
+      <Typography.Title level={4}>All Categories</Typography.Title>
       <Button type="primary" style={{ marginBottom: '16px' }} onClick={handleAdd}>
-        Add Product
+        Add Category
       </Button>
-      <Table
-        dataSource={paginatedProducts}
-        columns={columns}
-        loading={
-          loading['products/deleteProduct'] || 
-          loading['products/fetchProducts'] ||
-          loading['products/updateProduct'] ||
-          loading['products/createProduct']
-        }
+      <Table 
+        dataSource={paginatedCategories}
+        columns={columns} 
+        loading=
+        {loading['categories/deleteCategories'] || 
+          loading['categories/fetchCategories'] || 
+          loading['categories/updateCategory']  ||
+          loading['categories/createCategory']
+          
+        } 
         pagination={false}
-      />
-      <br />
-      <Pagination
+        />
+        <br />
+        <Pagination
         current={currentPage}
-        total={filteredProducts.length}
+        total={filteredCategories.length}
         pageSize={pageSize}
         onChange={(page) => setCurrentPage(page)}
       />
@@ -210,4 +198,5 @@ const AllProducts = () => {
   );
 };
 
-export default AllProducts;
+export default AllCategories;
+

@@ -1,10 +1,10 @@
 import {Route, Routes} from 'react-router-dom'
-import Dashboard from '../Pages/Dashboard'
-import Login from '../Pages/Login'
-import AllCategories from '../Pages/Categories/AllCategories'
-import CrudCategory from '../Pages/Categories/CrudCategory'
-import AllProducts from '../Pages/Products/AllProducts'
-import CrudProducts from '../Pages/Products/CrudProducts'
+import Dashboard from './Pages/Dashboard'
+import Login from './Pages/Login'
+import AllCategories from './Pages/Categories/AllCategories'
+import CrudCategory from './Pages/Categories/CrudCategory'
+import AllProducts from './Pages/Products/AllProducts'
+import CrudProducts from './Pages/Products/CrudProducts'
 
 const AppRoutes=()=>{
     return(

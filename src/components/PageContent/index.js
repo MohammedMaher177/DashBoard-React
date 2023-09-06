@@ -1,4 +1,4 @@
-import Routes from "../Routes"
+import Routes from "../../routes"
 import styles from './pagecontent.module.css'
 const PageContent=()=>{
     return (

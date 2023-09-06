@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser } from '../../../store/slices/LoginSlice';
+import { loginUser } from '../../store/slices/loginSlice/LoginAction';
 import styles from './login.module.css';
-import logo from '../../../assets/images/logo.png';
+// import logo from '/logo.png'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const Login = () => {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.login}>
-        <Image src={logo} alt="logo" className={styles.logo} />
+        <Image src='/assets/images/logo.png' alt="logo" className={styles.logo} />
         <Form name="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
           <label className={styles.labels}>Email</label>
           <Form.Item

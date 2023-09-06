@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk, isAnyOf, isAllOf } from "@reduxjs/toolkit";
-import axiosFetching from "../../API/axiosFetching";
-import { apiEndpoints } from "../../constants/apiEndpoints";
-import { getRequestNameFromActionType } from "../../utils";
+import { createSlice, isAnyOf, isAllOf } from "@reduxjs/toolkit";
+import { getRequestNameFromActionType } from "../../../utils";
+import { fetchProducts, fetchProductById, updateProduct, createProduct } from "./ProductsActions";
 
 const initialState = {
   products: [],
@@ -9,49 +8,6 @@ const initialState = {
   loading: {},
   error: {},
 };
-
-export const fetchProducts = createAsyncThunk(
-  'products/fetchProducts',
-  async (productId) => {
-    const endPoint=productId ? apiEndpoints.products.byId(productId) : apiEndpoints.products.all
-    const response= await axiosFetching.get(endPoint);
-    return response.data.data
-  }
-);
-
-export const fetchProductById = createAsyncThunk(
-  'products/fetchProductById',
-  async (productId) => {
-    const endPoint = apiEndpoints.products.byId(productId);
-    const response = await axiosFetching.get(endPoint);
-    return response.data.data;
-  }
-);
-
-export const deleteProduct = createAsyncThunk(
-  'products/deleteProduct',
-  async (productId) => {
-    await axiosFetching.delete(apiEndpoints.products.byId(productId));
-  }
-);
-
-export const updateProduct = createAsyncThunk(
-  'products/updateProduct',
-  async ({ id, updatedData }) => {
-    const endPoint = apiEndpoints.products.byId(id);
-    const response = await axiosFetching.put(endPoint, updatedData);
-    return response.data.data;
-  }
-);
-
-export const createProduct = createAsyncThunk(
-  'products/createProduct',
-  async (productData) => {
-      const response = await axiosFetching.post(apiEndpoints.products.all, productData);
-      return response.data.data;
-    
-  }
-);
 
 const ProductsSlice = createSlice({
   name: "products",

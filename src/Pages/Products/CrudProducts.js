@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, notification} from 'antd';
-import { fetchProductById, updateProduct, createProduct, fetchProducts } from '../../../store/slices/ProductsSlice';
+import { fetchProductById, updateProduct, createProduct, fetchProducts } from '../../store/slices/productsSlice/ProductsActions';
 import { useDispatch, useSelector } from 'react-redux';
 import CommonProductForm from './CommonProductForm'; 
 

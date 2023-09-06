@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk, isAnyOf, isAllOf } from "@reduxjs/toolkit";
-import axiosFetching from "../../API/axiosFetching";
-import { apiEndpoints } from "../../constants/apiEndpoints";
-import { getRequestNameFromActionType } from "../../utils";
+import { createSlice, isAnyOf, isAllOf } from "@reduxjs/toolkit";
+import { getRequestNameFromActionType } from "../../../utils";
+import { fetchCategories, fetchCategoryById, updateCategory, createCategory } from "./CategoriesActions";
 
 const initialState={
     categories:[],
@@ -9,45 +8,6 @@ const initialState={
     loading:{},
     error:{}
 }
-
-export const fetchCategories=createAsyncThunk('categories/fetchCategories', 
-    async(categoryId)=>{
-      const endPoint=categoryId ? apiEndpoints.categories.byId(categoryId) : apiEndpoints.categories.all
-     
-      const response= await axiosFetching.get(endPoint);
-      return response.data.data
-});
-
-export const fetchCategoryById=createAsyncThunk('categories/fetchCategoryById', async(categoryId)=>{
-  const endPoint=apiEndpoints.categories.byId(categoryId);
-  const response=await axiosFetching.get(endPoint)
-  return response.data.data
-})
-
-export const deleteCategory=createAsyncThunk('categories/deleteCategory', async(categoryId)=>{
-  // console.log(categoryId);
-
-    await axiosFetching.delete(apiEndpoints.categories.byId(categoryId))
-    
-});
-
-export const updateCategory = createAsyncThunk(
-  "categories/updateCategory",
-  async ({ id, updatedData }) => {
-    const endPoint = apiEndpoints.categories.byId(id);
-    const response = await axiosFetching.put(endPoint, updatedData);
-    return response.data.data;
-  }
-);
-
-export const createCategory = createAsyncThunk(
-  'categories/createCategory',
-  async (categoryData) => {
-      const response = await axiosFetching.post(apiEndpoints.categories.all, categoryData);
-      return response.data.data;
-    
-  }
-);
 
 const CategoriesSlice=createSlice({
     name:"categories",

@@ -3,7 +3,7 @@ import { Menu, Image } from 'antd';
 import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import styles from './sidemenu.module.css';
-import logo from "../../assets/images/logo.png"
+// import logo from "/assets"
 
 const { SubMenu } = Menu;
 
@@ -20,7 +20,7 @@ const SideMenu = () => {
 
   return (
     <div className={styles.sidemenu}>
-      <Image src={logo} alt="logo" className={styles.logo}></Image>
+      <Image src='/assets/images/logo.png' alt="logo" className={styles.logo}></Image>
       <Menu
         className={styles.menu}
         theme="light"

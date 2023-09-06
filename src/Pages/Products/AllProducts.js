@@ -1,19 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Typography, Table, Button, Space, Input, Pagination, notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories, deleteCategory } from '../../../store/slices/CategoriesSlice';
+import { fetchProducts, deleteProduct } from '../../store/slices/productsSlice/ProductsActions';
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
-
-const AllCategories = () => {
-  const categories = useSelector((state) => state.categories.categories);
-  const loading = useSelector((state) => state.categories.loading);
+const AllProducts = () => {
+  const products = useSelector((state) => state.products.products);
+  const loading = useSelector((state) => state.products.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   const [searchText, setSearchText] = useState('');
@@ -101,23 +100,54 @@ const AllCategories = () => {
 
   const columns = [
     {
-      title: 'Category ID',
-      dataIndex: '_id',
-      key: '_id',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      ...getColumnSearchProps('name'),
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      ...getColumnSearchProps('title'),
     },
     {
       title: 'Slug',
       dataIndex: 'slug',
       key: 'slug',
       ...getColumnSearchProps('slug'),
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+      ...getColumnSearchProps('description'),
       sorter: (a, b) => a.slug.localeCompare(b.slug),
       sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: 'Image Cover',
+      dataIndex: 'imageCover',
+      key: 'imageCover',
+      render: (imageCover) => (
+        <img src={imageCover} alt="Cover" style={{ width: '100px', height: '100px' }} />
+      ),
+    },
+    {
+      title: 'Images',
+      dataIndex: 'images',
+      key: 'images',
+      render: (images) => (
+        <div>
+          {images.map((image, index) => (
+            <img key={index} src={image} alt={`Image ${index + 1}`} style={{ width: '50px', height: '50px', marginRight: '5px' }} />
+          ))}
+        </div>
+      ),
     },
     {
       title: 'Actions',
@@ -134,63 +164,65 @@ const AllCategories = () => {
       ),
     },
   ];
-  
-  const navigate=useNavigate();
+
+  const navigate = useNavigate();
 
   const handleEdit = (id) => {
-    navigate(`/update-category/${id}`)
+    navigate(`/update-product/${id}`);
   };
 
-  const handleDelete = async (categoryId) => {
+  const handleDelete = async (productId) => {
     try{
-    await dispatch(deleteCategory(categoryId))
+    await dispatch(deleteProduct(productId));
     notification.success({
-      message: 'Category Deleted',
-      description: 'The category has been successfully deleted.'
+      message: 'Product Deleted',
+      description: 'The product has been successfully deleted.'
     })
-    dispatch(fetchCategories())
-    } catch (error) {
-      notification.error({
-        message: 'Error',
-        description: 'An error occurred while deleting the category.',
-      });
-    }
+    dispatch(fetchProducts());
+  } catch (error) {
+    notification.error({
+      message: 'Error',
+      description: 'An error occurred while deleting the category.',
+    });
   }
-    const handleAdd=()=>{
-      navigate('/add-category')
-    }
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 3;
 
-  const filteredCategories = categories ? categories.filter((category) =>
-  searchedColumn ? getColumnSearchProps(searchedColumn).onFilter(searchText, category) : true
-) : [];
+  const filteredProducts = products
+    ? products.filter((product) =>
+        searchedColumn ? getColumnSearchProps(searchedColumn).onFilter(searchText, product) : true
+      )
+    : [];
 
-  const paginatedCategories = filteredCategories.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const paginatedProducts = filteredProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const handleAdd=()=>{
+    navigate('/add-product')
+  }
 
   return (
     <div>
-      <Typography.Title level={4}>All Categories</Typography.Title>
+      <Typography.Title level={4}>All Products</Typography.Title>
       <Button type="primary" style={{ marginBottom: '16px' }} onClick={handleAdd}>
-        Add Category
+        Add Product
       </Button>
-      <Table 
-        dataSource={paginatedCategories}
-        columns={columns} 
-        loading=
-        {loading['categories/deleteCategories'] || 
-          loading['categories/fetchCategories'] || 
-          loading['categories/updateCategory']  ||
-          loading['categories/createCategory']
-          
-        } 
+      <Table
+        dataSource={paginatedProducts}
+        columns={columns}
+        loading={
+          loading['products/deleteProduct'] || 
+          loading['products/fetchProducts'] ||
+          loading['products/updateProduct'] ||
+          loading['products/createProduct']
+        }
         pagination={false}
-        />
-        <br />
-        <Pagination
+      />
+      <br />
+      <Pagination
         current={currentPage}
-        total={filteredCategories.length}
+        total={filteredProducts.length}
         pageSize={pageSize}
         onChange={(page) => setCurrentPage(page)}
       />
@@ -198,5 +230,4 @@ const AllCategories = () => {
   );
 };
 
-export default AllCategories;
-
+export default AllProducts;

@@ -5,7 +5,7 @@ import SideMenu from './components/SideMenu';
 import PageContent from './components/PageContent';
 import Footer from './components/Footer';
 import AppHeader from './components/Header';
-import Login from './components/Pages/Login';
+import Login from '../src/Pages/Login';
 
 const { Sider } = Layout;
 

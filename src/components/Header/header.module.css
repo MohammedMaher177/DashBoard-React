@@ -10,11 +10,11 @@
 .header .title {
   font-size: 27px;
   font-weight: 600;
-  color: RGB(138, 43, 226);
+  color: RGB(21 14 28);
 }
 .header .icons {
   font-size: 22px;
-  color: RGB(138, 43, 226);
+  color: RGB(21 14 28);
 }
 
 @media (max-width: 768px) {

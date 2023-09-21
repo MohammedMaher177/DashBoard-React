@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "./LoginAction";
 
 const initialState={
-    user:null,
+  message:null,
     loading:false,
     error:null
 };
@@ -10,7 +10,11 @@ const initialState={
   const LoginSlice = createSlice({
     name: 'login',
     initialState,
-    reducers: {},
+    reducers: {
+      logout : (state)=>{
+        state.message = null
+      }
+    },
     extraReducers: (builder) => {
       builder
         .addCase(loginUser.pending, (state) => {
@@ -18,8 +22,9 @@ const initialState={
           state.error = null;
         })
         .addCase(loginUser.fulfilled, (state, action) => {
+          console.log(action.payload);
           state.loading = false;
-          state.user = action.payload;
+          state.message = action.payload.message;
         })
         .addCase(loginUser.rejected, (state, action) => {
           state.loading = false;
@@ -28,4 +33,7 @@ const initialState={
     },
   });
   
+  export const {logout} = LoginSlice.actions
+
+
   export default LoginSlice.reducer;

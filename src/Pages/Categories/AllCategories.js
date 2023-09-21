@@ -1,23 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Typography, Table, Button, Space, Input, Pagination, notification } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories, deleteCategory } from '../../store/slices/categoriesSlice/CategoriesActions';
-import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom';
-
+import React, { useEffect, useRef, useState } from "react";
+import { Typography, Table, Button, Space, Input, Pagination } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../store/slices/categoriesSlice/CategoriesActions";
+import Highlighter from "react-highlight-words";
+import { SearchOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import UpdateModal from "../../components/Modals/UpdateModal.jsx";
+import DeleteModal from "../../components/Modals/DeleteModal.jsx";
+import AddCategory from "../../components/Modals/AddCategory.js";
 
 const AllCategories = () => {
-  const categories = useSelector((state) => state.categories.categories);
-  const loading = useSelector((state) => state.categories.loading);
+  const { categories, loading } = useSelector(({ categories }) => categories);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -28,11 +29,17 @@ const AllCategories = () => {
 
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
+    setSearchText("");
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
@@ -40,9 +47,11 @@ const AllCategories = () => {
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ marginBottom: 8, display: 'block' }}
+          style={{ marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
@@ -53,7 +62,11 @@ const AllCategories = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -74,13 +87,10 @@ const AllCategories = () => {
       </div>
     ),
     filterIcon: (filtered) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
+      record[dataIndex].toString().toLowerCase().includes(value?.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current.select(), 100);
@@ -89,10 +99,10 @@ const AllCategories = () => {
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString() : ""}
         />
       ) : (
         text
@@ -101,94 +111,83 @@ const AllCategories = () => {
 
   const columns = [
     {
-      title: 'Category ID',
-      dataIndex: '_id',
-      key: '_id',
+      title: "Category ID",
+      dataIndex: "_id",
+      key: "_id",
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      ...getColumnSearchProps('name'),
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      ...getColumnSearchProps("name"),
     },
     {
-      title: 'Slug',
-      dataIndex: 'slug',
-      key: 'slug',
-      ...getColumnSearchProps('slug'),
+      title: "Slug",
+      dataIndex: "slug",
+      key: "slug",
+      ...getColumnSearchProps("slug"),
       sorter: (a, b) => a.slug.localeCompare(b.slug),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ["ascend", "descend"],
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       render: (row) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEdit(row._id)}>
-            Edit
-          </Button>
-          <Button type="danger" onClick={() => handleDelete(row._id)}>
-            Delete
-          </Button>
+          <UpdateModal id={row?._id} Doc={row} />
+          <DeleteModal id={row?._id} />
         </Space>
       ),
     },
   ];
-  
-  const navigate=useNavigate();
 
-  const handleEdit = (id) => {
-    navigate(`/update-category/${id}`)
+  const navigate = useNavigate();
+
+  const handleAdd = () => {
+    navigate("/add-category");
   };
-
-  const handleDelete = async (id) => {
-    try{
-    await dispatch(deleteCategory(id))
-    notification.success({
-      message: 'Category Deleted',
-      description: 'The category has been successfully deleted.'
-    })
-    dispatch(fetchCategories())
-    } catch (error) {
-      notification.error({
-        message: 'Error',
-        description: 'An error occurred while deleting the category.',
-      });
-    }
-  }
-    const handleAdd=()=>{
-      navigate('/add-category')
-    }
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 3;
 
-  const filteredCategories = categories ? categories.filter((category) =>
-  searchedColumn ? getColumnSearchProps(searchedColumn).onFilter(searchText, category) : true
-) : [];
-
-  const paginatedCategories = filteredCategories.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
+  const filteredCategories = categories
+    ? categories.filter((category) =>
+        searchedColumn
+          ? getColumnSearchProps(searchedColumn).onFilter(searchText, category)
+          : true
+      )
+    : [];
+  const paginatedCategories = filteredCategories.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
   return (
     <div>
       <Typography.Title level={4}>All Categories</Typography.Title>
-      <Button type="primary" style={{ marginBottom: '16px' }} onClick={handleAdd}>
+      {/* <Button
+        type="primary"
+        style={{ marginBottom: "16px" }}
+        onClick={handleAdd}
+      >
         Add Category
-      </Button>
-      <Table 
+      </Button> */}
+      <AddCategory />
+
+      <Table
         dataSource={paginatedCategories}
-        columns={columns} 
-        loading=
-        {loading['categories/deleteCategories'] || 
-          loading['categories/fetchCategories'] || 
-          loading['categories/updateCategory']  ||
-          loading['categories/createCategory']
-          
-        } 
+        columns={columns}
+        loading={
+          loading["categories/deleteCategories"] ||
+          loading["categories/fetchCategories"] ||
+          loading["categories/updateCategory"] ||
+          loading["categories/createCategory"]
+        }
         pagination={false}
-        />
-        <br />
-        <Pagination
+        key={"_id"}
+        rowKey={"_id"}
+      />
+      <br />
+      <Pagination
         current={currentPage}
         total={filteredCategories.length}
         pageSize={pageSize}
@@ -199,4 +198,3 @@ const AllCategories = () => {
 };
 
 export default AllCategories;
-

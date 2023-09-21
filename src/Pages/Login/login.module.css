@@ -4,14 +4,21 @@
   align-items: center;
   height: 100vh;
 }
+.loginContainer .error {
+  color: rgb(161, 30, 102);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
 .loginContainer .login {
-  background-color: rgb(207, 186, 228);
+  background-color: rgba(21, 14, 28, 0.6);
   padding: 2rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   text-align: center;
   max-width: 350px;
   width: 100%;
   border-radius: 20px;
+  z-index: 2;
 }
 .loginContainer .login .logo {
   width: 200px;
@@ -34,4 +41,21 @@
   font-weight: 600;
   padding-bottom: 8px;
   color: RGB(138, 43, 226);
+}
+
+.bgImage {
+  background-image: url(./unit.jpg);
+  position: absolute;
+  top: 0;
+  bottom: 10%;
+  width: 100%;
+  /* Add the blur effect */
+  filter: blur(6px);
+  -webkit-filter: blur(8px);
+  /* Full height */
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }/*# sourceMappingURL=login.module.css.map */

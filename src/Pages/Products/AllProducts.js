@@ -7,8 +7,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const AllProducts = () => {
-  const products = useSelector((state) => state.products.products);
-  const loading = useSelector((state) => state.products.loading);
+  const {products, loading} = useSelector(({products}) => products);
   const dispatch = useDispatch();
 
   useEffect(() => {

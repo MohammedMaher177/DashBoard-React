@@ -1,5 +1,5 @@
 .sidemenu {
-  background-color: rgb(207, 186, 228);
+  background-color: rgb(21, 14, 28);
   height: 100vh;
 }
 .sidemenu .logo {
@@ -8,7 +8,7 @@
 .sidemenu .menu {
   font-size: 16px;
   font-weight: 600;
-  background-color: rgb(207, 186, 228);
+  background-color: rgb(21, 14, 28);
   border: none;
   color: #fff;
   padding-top: 10px;

@@ -16,9 +16,8 @@ import SelectItems from "../Inputs/MultiSelect.jsx";
 import { getCategoryNames } from "../../store/slices/categoriesSlice/CategoriesActions.js";
 
 const AddProduct = () => {
-  const { error, loading, msg, names } = useSelector(
-    ({ categories }) => categories
-  );
+  const { names } = useSelector(({ categories }) => categories);
+  const { error, loading, msg } = useSelector(({ products }) => products);
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(
@@ -51,7 +50,7 @@ const AddProduct = () => {
 
   const formData = new FormData();
   const handleOk = async () => {
-    console.log(productData.category[0]);
+    setConfirmLoading(true)
     formData.append("name", productData.name);
     formData.append("description", productData.description);
     formData.append("logo", productData.logo);
@@ -61,22 +60,25 @@ const AddProduct = () => {
     formData.append("totalAmount", productData.totalAmount);
     formData.append("price", productData.price);
     console.log(formData.get("colors[]"));
-    await dispatch(createProduct(formData));
+   const {payload } =  await dispatch(createProduct(formData));
+    setConfirmLoading(false)
+    console.log(payload);
     if (
-      !error["categories/deleteCategory"] &&
-      !loading["categories/deleteCategory"]
+      !(payload.error || payload.errors) &&
+      !loading["products/addProduct"]
     ) {
+        // handleClose()
       notification.success({
-        message: "Category Created",
-        description: "The category has been successfully Created.",
+        message: "Product Created",
+        description: "The Product has been successfully Created.",
       });
     } else if (
-      error["categories/deleteCategory"] &&
-      !loading["categories/deleteCategory"]
+      error["products/addProduct"] &&
+      !loading["products/addProduct"]
     ) {
       notification.error({
-        message: "msg",
-        description: "payload.error",
+        message: msg,
+        description: payload.error,
       });
     }
   };
@@ -86,10 +88,9 @@ const AddProduct = () => {
   };
 
   const handleClose = () => {
-    if (msg === "success" && !error["categories/addCategory"]) {
+    if (msg === "success" && !error["products/addProduct"]) {
       handleCancel();
-    } else if (error["categories/addCategory"]) {
-      //   console.log(error);
+    } else if (error["products/addProduct"]) {
       setShow(true);
     }
   };

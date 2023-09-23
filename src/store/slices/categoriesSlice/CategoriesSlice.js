@@ -1,13 +1,14 @@
 import { createSlice, isAnyOf, isAllOf } from "@reduxjs/toolkit";
 import { getRequestNameFromActionType } from "../../../utils";
-import { fetchCategories, fetchCategoryById, updateCategory, createCategory, deleteCategory } from "./CategoriesActions";
+import { fetchCategories, fetchCategoryById, updateCategory, createCategory, deleteCategory, getCategoryNames } from "./CategoriesActions";
 
 const initialState={
     categories:[],
     categoryById:{},
     loading:{},
     error:{},
-    msg:null
+    msg:null,
+    names:[]
 }
 
 const CategoriesSlice=createSlice({
@@ -78,7 +79,13 @@ const CategoriesSlice=createSlice({
         console.log(action.payload);
         state.error["categories/addCategory"] = action.payload
       })
-      
+      .addCase(getCategoryNames.pending, (state, actions) => {
+        state.loading["categories/names"] = true
+      })
+      .addCase(getCategoryNames.fulfilled, (state, actions) => {
+        state.loading["categories/names"] = false
+        state.names = actions.payload
+      })
        
     },
 });

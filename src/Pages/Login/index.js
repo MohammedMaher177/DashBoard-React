@@ -25,11 +25,11 @@ const Login = () => {
 
   const onFinish = async () => {
     try {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (!emailPattern.test(email)) {
-        alert("Please enter a valid email address.");
-        return;
-      }
+      // const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      // if (!emailPattern.test(email)) {
+      //   alert("Please enter a valid email address.");
+      //   return;
+      // }
       await dispatch(loginUser({ email, password }));
       console.log({ error, message, loading });
       //

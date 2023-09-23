@@ -17,7 +17,7 @@ const CommonProductForm = ({ onFinish, isEditing, initialValues }) => {
 
   const handleSubmit = (values) => {
     const formData = new FormData();
-
+    console.log(imageCover);
     formData.append('title', values.title);
     formData.append('slug', values.slug);
     formData.append('description', values.description);
@@ -33,8 +33,8 @@ const CommonProductForm = ({ onFinish, isEditing, initialValues }) => {
         formData.append(`images[${index}]`, image);
       });
     }
-
-    onFinish(formData);
+    console.log(formData.get("imageCover"));
+    // onFinish(formData);
   };
 
   return (
@@ -120,10 +120,10 @@ const CommonProductForm = ({ onFinish, isEditing, initialValues }) => {
       </Form.Item>
 
       <Form.Item label="Image Cover">
-  {isEditing && initialValues.imageCover && (
+  {imageCover && (
     <img
-      src={initialValues.imageCover}
-      alt="Image Cover"
+      src={imageCover}
+      alt="Image_Cover"
       style={{ maxWidth: '100px', maxHeight: '100px' }}
     />
   )}

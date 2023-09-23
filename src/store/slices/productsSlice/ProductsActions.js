@@ -37,11 +37,19 @@ export const updateProduct = createAsyncThunk(
 
 export const createProduct = createAsyncThunk(
   "products/createProduct",
-  async (productData) => {
-    const response = await axiosFetching.post(
+  async (productData, {rejectWithValue}) => {
+    console.log(productData);
+    // axiosFetching.headers = "multipart/form-data"
+    return await axiosFetching.post(
       apiEndpoints.products.all,
-      productData
-    );
-    return response.data.data;
+      productData,
+      {
+        headers: {
+          "Content-Type": 'multipart/form-data'
+        }
+      }
+    ).then(res=>res).catch(({response})=>{
+      return rejectWithValue(response.data)
+    });
   }
 );

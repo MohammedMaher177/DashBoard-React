@@ -27,31 +27,14 @@ const ProductsSlice = createSlice({
         state.loading['products/updateProduct'] = false;
         state.productById = action.payload;
       })
+      .addCase(createProduct.pending, (state, action) => {
+        state.loading["products/addProduct"] = true;
+      })
       .addCase(createProduct.fulfilled, (state, action) => {
-        state.loading[getRequestNameFromActionType(action?.type)] = false;
+        state.loading["products/addProduct"] = false;
         state.products.push(action.payload);
       })
-      .addMatcher(
-        isAllOf('/products/fetchPending'),
-        (state, action) => {
-          if (action.type.includes("pending")) {
-            const requestName = getRequestNameFromActionType(action?.type, '/pending');
-            if (requestName) {
-              state.loading[requestName] = true;
-              state.error[requestName] = null;
-            }
-          }
-        }
-      )
-      .addMatcher(
-        isAnyOf('/products/fetchRejected'),
-        (state, action) => {
-          if (action.type.includes("rejected")) {
-            state.loading[getRequestNameFromActionType(action?.type, 'rejected')] = false;
-            state.error[getRequestNameFromActionType(action?.type, 'rejected')] = null;
-          }
-        }
-      );
+      
   },
 });
 
@@ -62,3 +45,26 @@ export const {
 } = ProductsSlice.actions;
 
 export default ProductsSlice.reducer;
+
+
+// .addMatcher(
+//   isAllOf('/products/fetchPending'),
+//   (state, action) => {
+//     if (action.type.includes("pending")) {
+//       const requestName = getRequestNameFromActionType(action?.type, '/pending');
+//       if (requestName) {
+//         state.loading[requestName] = true;
+//         state.error[requestName] = null;
+//       }
+//     }
+//   }
+// )
+// .addMatcher(
+//   isAnyOf('/products/fetchRejected'),
+//   (state, action) => {
+//     if (action.type.includes("rejected")) {
+//       state.loading[getRequestNameFromActionType(action?.type, 'rejected')] = false;
+//       state.error[getRequestNameFromActionType(action?.type, 'rejected')] = null;
+//     }
+//   }
+// );

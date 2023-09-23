@@ -48,11 +48,21 @@ export const updateCategory = createAsyncThunk(
 export const createCategory = createAsyncThunk(
   "categories/addCategory",
   async (categoryData) => {
+    console.log(categoryData);
     const response = await axiosFetching.post(
       apiEndpoints.categories.all,
       categoryData
     );
     console.log(response);
     return response.data;
+  }
+);
+
+export const getCategoryNames = createAsyncThunk(
+  "categories/fetchCategoryNames",
+  async () => {
+    const endPoint = apiEndpoints.categories.names;
+    const response = await axiosFetching.get(endPoint);
+    return response.data.result;
   }
 );

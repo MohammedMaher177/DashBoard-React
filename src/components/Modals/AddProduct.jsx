@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import {
   Input,
   Space,
@@ -15,7 +17,7 @@ import UploadImageComp from "../Inputs/UpoadImage.jsx";
 import SelectItems from "../Inputs/MultiSelect.jsx";
 import { getCategoryNames } from "../../store/slices/categoriesSlice/CategoriesActions.js";
 
-const AddProduct = () => {
+const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
   const { names } = useSelector(({ categories }) => categories);
   const { error, loading, msg } = useSelector(({ products }) => products);
   const [open, setOpen] = useState(false);
@@ -25,13 +27,59 @@ const AddProduct = () => {
   );
 
   const [productData, setproductData] = useState({
-    name: "",
-    description: "",
-    price: 0,
-    logo: null,
-    totalAmount: 0,
-    colors: [],
-    category: "",
+    name: Doc?.name || "",
+    description: Doc?.description || "",
+    price: Doc?.price || null,
+    logo: Doc?.logo.secure_url || null,
+    totalAmount: Doc?.totalAmount || null,
+    colors: Doc?.colors || [],
+    category: Doc?.category.name || null,
+  });
+
+  const setFormData = () => {
+    formData.append("name", productData.name);
+    formData.append("description", productData.description);
+    formData.append("logo", productData.logo);
+    formData.append("colors[]", JSON.stringify(productData.colors));
+    formData.append("category", productData.category);
+    formData.append("totalAmount", productData.totalAmount);
+    formData.append("price", productData.price);
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required(),
+    description: Yup.string().required(),
+    price: Yup.number().required(),
+    totalAmount: Yup.number().required(),
+    colors : Yup.array(),
+    category: Yup.string(),
+  })
+  
+  const handleOk = async () => {
+    console.log(productData);
+    console.log(formik);
+    // setConfirmLoading(true);
+    setFormData();
+    const { payload } = await dispatch(createProduct(formData));
+    setConfirmLoading(false);
+    console.log(payload);
+    if (!(payload.error || payload.errors) && !loading["products/addProduct"]) {
+      setShow(false)
+    } else if (
+      (payload.error || payload.errors) &&
+      !loading["products/addProduct"]
+    ) {
+      notification.error({
+        message: msg,
+        description: payload.error,
+      });
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: productData,
+    onSubmit: handleOk,
+    validationSchema,
   });
 
   const dispatch = useDispatch();
@@ -46,47 +94,14 @@ const AddProduct = () => {
       ...prevFormData,
       [e.target.name]: e.target.value,
     }));
+    formik.setValues(productData)
   };
 
   const formData = new FormData();
-  const handleOk = async () => {
-    setConfirmLoading(true)
-    formData.append("name", productData.name);
-    formData.append("description", productData.description);
-    formData.append("logo", productData.logo);
-    formData.append("colors[]", JSON.stringify(productData.colors));
-    // productData.colors.forEach(el => formData.append("colors[]", el))
-    formData.append("category", productData.category[0]);
-    formData.append("totalAmount", productData.totalAmount);
-    formData.append("price", productData.price);
-    console.log(formData.get("colors[]"));
-   const {payload } =  await dispatch(createProduct(formData));
-    setConfirmLoading(false)
-    console.log(payload);
-    if (
-      !(payload.error || payload.errors) &&
-      !loading["products/addProduct"]
-    ) {
-        // handleClose()
-      notification.success({
-        message: "Product Created",
-        description: "The Product has been successfully Created.",
-      });
-    } else if (
-      error["products/addProduct"] &&
-      !loading["products/addProduct"]
-    ) {
-      notification.error({
-        message: msg,
-        description: payload.error,
-      });
-    }
-  };
 
   const handleCancel = () => {
     setOpen(false);
   };
-
   const handleClose = () => {
     if (msg === "success" && !error["products/addProduct"]) {
       handleCancel();
@@ -94,13 +109,16 @@ const AddProduct = () => {
       setShow(true);
     }
   };
+  const onFinishFailed = (e) => {
+    console.log(e);
+  };
   useEffect(() => {
     dispatch(getCategoryNames());
   }, []);
   return (
     <>
-      <Button type="primary" key="addModal" onClick={showModal}>
-        Add Product
+      <Button type="primary" key="addModal" icon={icon} onClick={showModal}>
+        {Title}
       </Button>
       {loading["categories/names"] ? (
         "Loading"
@@ -123,62 +141,95 @@ const AddProduct = () => {
               />
             )}
           </Divider>
-          <Form onFinish={handleOk} style={{ width: "100%" }}>
+          <Form
+            onFinish={formik.handleSubmit}
+            style={{ width: "100%" }}
+          >
             <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-              <Space.Compact style={{ width: "100%" }}>
-                <Input
-                  addonBefore="Name"
-                  style={{ width: "100%" }}
-                  defaultValue={productData.name}
-                  onChange={handleChange}
-                  name="name"
-                />
-              </Space.Compact>
-              <Space.Compact size="large" style={{ width: "100%" }}>
-                <Input
-                  style={{ width: "100%" }}
-                  name="description"
-                  defaultValue={productData.description}
-                  addonBefore={"Desc"}
-                  onChange={handleChange}
-                />
-              </Space.Compact>
-              <Space.Compact size="large" style={{ width: "100%" }}>
-                <Input
-                  style={{ width: "100%" }}
-                  name="price"
-                  type="number"
-                  defaultValue={productData.price}
-                  addonBefore={"Price"}
-                  onChange={handleChange}
-                />
-              </Space.Compact>
-              <Space.Compact size="large" style={{ width: "100%" }}>
-                <Input
-                  style={{ width: "100%" }}
-                  name="totalAmount"
-                  type="number"
-                  defaultValue={productData.totalAmount}
-                  addonBefore={"Qty"}
-                  onChange={handleChange}
-                />
-              </Space.Compact>
-              <Space.Compact size="large" style={{ width: "100%" }}>
-                <SelectItems
-                  handleChange={handleChange}
+              <Form.Item rules={[{ max: 50, min: 5, required: true }]}>
+                <Space.Compact style={{ width: "100%" }}>
+                  <Input
+                    addonBefore="Name"
+                    style={{ width: "100%" }}
+                    defaultValue={productData.name}
+                    onChange={handleChange}
+                    name="name"
+                    required
+                  />
+                </Space.Compact>
+              </Form.Item>
+              <Form.Item rules={[{ required: true }]}>
+                <Space.Compact size="large" style={{ width: "100%" }}>
+                  <Input
+                    required
+                    style={{ width: "100%" }}
+                    name="description"
+                    defaultValue={productData.description}
+                    addonBefore={"Desc"}
+                    onChange={handleChange}
+                  />
+                </Space.Compact>
+              </Form.Item>
+              <Form.Item rules={[{ required: true }]}>
+                <Space.Compact size="large" style={{ width: "100%" }}>
+                  <Input
+                    required
+                    style={{ width: "100%" }}
+                    name="price"
+                    type="number"
+                    defaultValue={productData.price}
+                    addonBefore={"Price"}
+                    onChange={handleChange}
+                  />
+                </Space.Compact>
+              </Form.Item>
+              <Form.Item rules={[{ required: true }]}>
+                <Space.Compact size="large" style={{ width: "100%" }}>
+                  <Input
+                    required
+                    style={{ width: "100%" }}
+                    name="totalAmount"
+                    type="number"
+                    defaultValue={productData.totalAmount}
+                    addonBefore={"Qty"}
+                    onChange={handleChange}
+                  />
+                </Space.Compact>
+              </Form.Item>
+              <Form.Item rules={[{ required: true }]}>
+                <Space.Compact size="large" style={{ width: "100%" }}>
+                  <SelectItems
+                  setFieldValue={formik.setFieldValue}
+                    multiple={true}
+                    handleChange={handleChange}
+                    setproductData={setproductData}
+                    name="colors"
+                    defaultValue={
+                      // () =>
+                      Doc?.colors.length && JSON.parse([...Doc?.colors])
+                      // : false
+                    }
+                  />
+                </Space.Compact>
+              </Form.Item>
+              <Form.Item rules={[{ required: true }]}>
+                <Space.Compact size="large" style={{ width: "100%" }}>
+                  <SelectItems
+                    setFieldValue={formik.setFieldValue}
+                    handleChange={handleChange}
+                    setproductData={setproductData}
+                    name="category"
+                    options={[...names]}
+                    defaultValue={productData.category}
+                  />
+                </Space.Compact>
+              </Form.Item>
+              <Form.Item rules={[{ required: true }]}>
+                <UploadImageComp
                   setproductData={setproductData}
-                  name="colors"
+                  image={productData.logo}
                 />
-              </Space.Compact>
-              <Space.Compact size="large" style={{ width: "100%" }}>
-                <SelectItems
-                  handleChange={handleChange}
-                  setproductData={setproductData}
-                  name="category"
-                  options={[...names]}
-                />
-              </Space.Compact>
-              <UploadImageComp setproductData={setproductData} />
+              </Form.Item>
               <Space>
                 <Button
                   key="submit"
@@ -186,6 +237,7 @@ const AddProduct = () => {
                   htmlType="submit"
                   loading={confirmLoading}
                   onClick={handleOk}
+                  disabled={!(formik.isValid && formik.dirty)}
                 >
                   Submit
                 </Button>

@@ -11,7 +11,7 @@ const AppRoutes=()=>{
             <Routes>
                 <Route path="/" element={<Login />}></Route>
                 <Route path="/dashboard" element={<Dashboard />}></Route>
-                <Route path="/allcategories" element={<AllCategories />}></Route>
+                <Route path="/categories" element={<AllCategories />}></Route>
                 <Route path="/update-category/:id" element={<CrudCategory />}></Route>
                 <Route path="/add-category" element={<CrudCategory />}></Route>
                 <Route path="/allproducts" element={<AllProducts />}></Route>

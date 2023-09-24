@@ -18,7 +18,7 @@ const colors = [
   },
 ];
 const tagRender = (props) => {
-  const { label, value, closable, onClose } = props;
+  const { label, closable, onClose } = props;
   const onPreventMouseDown = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -37,27 +37,40 @@ const tagRender = (props) => {
     </Tag>
   );
 };
-const SelectItems = ({ setproductData, productData, name, options=colors }) => {
+const SelectItems = ({
+  setproductData,
+  name,
+  options = colors,
+  defaultValue,
+  multiple = false,
+  setFieldValue
+}) => {
+  // console.log((defaultValue));
   const handleChange = (e) => {
     setproductData((prevFormData) => ({
       ...prevFormData,
       [name]: e,
     }));
+    setFieldValue(name, e)
   };
   return (
     <Select
+      defaultValue={defaultValue ? defaultValue :  []}
+      // defaultValue={[]}
       name={name}
-      mode="multiple"
+      mode={multiple ? "multiple" : false}
       onChange={handleChange}
       tagRender={tagRender}
-      defaultValue={[]}
       style={{
         width: "100%",
       }}
-      options={options.map(item=>{return{
-        value: item._id,
-        label: item.name || item._id
-      }})}
+      options={options.map((item) => {
+        return {
+          value: item._id,
+          label: item.name,
+        };
+      })}
+      // options={{list : options, value: "_id", label : "name"}}
     />
   );
 };

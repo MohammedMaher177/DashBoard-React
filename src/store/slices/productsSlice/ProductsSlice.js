@@ -1,13 +1,21 @@
 import { createSlice, isAnyOf, isAllOf } from "@reduxjs/toolkit";
 import { getRequestNameFromActionType } from "../../../utils";
-import { fetchProducts, fetchProductById, updateProduct, createProduct } from "./ProductsActions";
+import {
+  fetchProducts,
+  fetchProductById,
+  updateProduct,
+  createProduct,
+  deleteProduct,
+} from "./ProductsActions";
+import { notification } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const initialState = {
   products: [],
   productById: {},
   loading: {},
   error: {},
-  msg:""
+  msg: "",
 };
 
 const ProductsSlice = createSlice({
@@ -25,24 +33,49 @@ const ProductsSlice = createSlice({
         state.productById = action.payload;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
-        state.loading['products/updateProduct'] = false;
+        state.loading["products/updateProduct"] = false;
         state.productById = action.payload;
       })
       .addCase(createProduct.pending, (state, action) => {
         state.loading["products/addProduct"] = true;
+        notification.open({
+          message: "Loading.....",
+          icon: <LoadingOutlined />,
+        });
       })
       .addCase(createProduct.fulfilled, (state, action) => {
+        notification.destroy();
         state.loading["products/addProduct"] = false;
         state.msg = action.payload.message;
         state.products.push(action.payload.result);
+        notification.success({
+          message: "Product Created",
+          description: "The Product has been successfully Created.",
+        });
       })
-      .addCase(createProduct.rejected, (state, {payload}) => {
+      .addCase(createProduct.rejected, (state, { payload }) => {
+        notification.destroy();
         console.log(payload);
         state.loading["products/addProduct"] = false;
         state.error["products/addProduct"] = payload.errors[0] | payload.error;
-        
+        notification.error({
+          message: payload.message,
+          description: state.error,
+        });
       })
-      
+      .addCase(deleteProduct.pending, (state, actions) => {
+        state.loading["products/deleteProduct"] = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, { payload }) => {
+        state.loading["products/deleteProduct"] = false;
+        state.products = state.products.filter(
+          (el) => el._id !== payload.result._id
+        );
+      })
+      .addCase(deleteProduct.rejected, (state, { payload }) => {
+        state.loading["products/deleteProduct"] = false;
+        state.error["products/deleteProduct"] = payload.result;
+      });
   },
 });
 
@@ -53,7 +86,6 @@ export const {
 } = ProductsSlice.actions;
 
 export default ProductsSlice.reducer;
-
 
 // .addMatcher(
 //   isAllOf('/products/fetchPending'),

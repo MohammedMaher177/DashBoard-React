@@ -1,6 +1,11 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { Button, Input, Space } from "antd";
 import Highlighter from "react-highlight-words";
+import AddProduct from "../Modals/AddProduct.jsx";
 
 export const GetColumnSearchProps = (
   dataIndex,
@@ -101,46 +106,55 @@ export const getProductData = (
 ) => {
   return [
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
-      ...GetColumnSearchProps("title", searchInput,
-      handleSearch,
-      handleReset,
-      setSearchText,
-      setSearchedColumn,
-      searchedColumn,
-      searchText),
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      ...GetColumnSearchProps(
+        "name",
+        searchInput,
+        handleSearch,
+        handleReset,
+        setSearchText,
+        setSearchedColumn,
+        searchedColumn,
+        searchText
+      ),
     },
     {
       title: "Slug",
       dataIndex: "slug",
       key: "slug",
-      ...GetColumnSearchProps("slug", searchInput,
-      handleSearch,
-      handleReset,
-      setSearchText,
-      setSearchedColumn,
-      searchedColumn,
-      searchText),
+      ...GetColumnSearchProps(
+        "slug",
+        searchInput,
+        handleSearch,
+        handleReset,
+        setSearchText,
+        setSearchedColumn,
+        searchedColumn,
+        searchText
+      ),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      ...GetColumnSearchProps("description", searchInput,
-      handleSearch,
-      handleReset,
-      setSearchText,
-      setSearchedColumn,
-      searchedColumn,
-      searchText),
+      ...GetColumnSearchProps(
+        "description",
+        searchInput,
+        handleSearch,
+        handleReset,
+        setSearchText,
+        setSearchedColumn,
+        searchedColumn,
+        searchText
+      ),
       sorter: (a, b) => a.slug.localeCompare(b.slug),
       sortDirections: ["ascend", "descend"],
     },
     {
       title: "Quantity",
-      dataIndex: "quantity",
+      dataIndex: "totalAmount",
       key: "quantity",
     },
     {
@@ -150,42 +164,53 @@ export const getProductData = (
     },
     {
       title: "Image Cover",
-      dataIndex: "imageCover",
-      key: "imageCover",
-      render: (imageCover) => (
-        <img
-          src={imageCover}
-          alt="Cover"
-          style={{ width: "100px", height: "100px" }}
-        />
+      dataIndex: "logo",
+      key: "logo",
+      render: (logo) => (
+        logo?.secure_url && <img
+        src={logo.secure_url}
+        alt="Cover"
+        style={{ width: "100px", height: "100px" }}
+      />
       ),
     },
-    {
-      title: "Images",
-      dataIndex: "images",
-      key: "images",
-      render: (images) => (
-        <div>
-          {images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`Image_${index + 1}`}
-              style={{ width: "50px", height: "50px", marginRight: "5px" }}
-            />
-          ))}
-        </div>
-      ),
-    },
+    // {
+    //   title: "Images",
+    //   dataIndex: "images",
+    //   key: "images",
+    //   render: (images) => (
+    //     <div>
+    //       {images.map((image, index) => (
+    //         <img
+    //           key={index}
+    //           src={image}
+    //           alt={`Image_${index + 1}`}
+    //           style={{ width: "50px", height: "50px", marginRight: "5px" }}
+    //         />
+    //       ))}
+    //     </div>
+    //   ),
+    // },
     {
       title: "Actions",
       key: "actions",
+      
       render: (row) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEdit(row._id)}>
-            Edit
-          </Button>
-          <Button type="danger" onClick={() => handleDelete(row._id)}>
+          <span
+            // type="primary"
+            icon={<EditOutlined />}
+            // loading={false}
+            onClick={() => handleEdit(row._id)}
+          >
+            <AddProduct Doc={row} Title="Edit" icon={<EditOutlined />}/>
+          </span>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            loading={false}
+            onClick={() => handleDelete(row._id)}
+          >
             Delete
           </Button>
         </Space>
@@ -193,4 +218,3 @@ export const getProductData = (
     },
   ];
 };
-;

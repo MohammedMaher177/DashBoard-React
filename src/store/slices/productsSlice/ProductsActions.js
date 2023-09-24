@@ -21,8 +21,18 @@ export const fetchProductById = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (productId) => {
-    await axiosFetching.delete(apiEndpoints.products.byId(productId));
+  async (productId, { rejectWithValue }) => {
+    console.log(productId);
+    return await axiosFetching
+      .delete(apiEndpoints.products.byId(productId))
+      .then(({data}) => {
+        console.log(data);
+        return data;
+      })
+      .catch(({response}) => {
+        console.log(response);
+        return rejectWithValue(response);
+      });
   }
 );
 
@@ -36,7 +46,7 @@ export const updateProduct = createAsyncThunk(
 );
 
 export const createProduct = createAsyncThunk(
-  "products/createProduct",
+  "products/addProduct",
   async (productData, { rejectWithValue }) => {
     console.log(productData);
     // axiosFetching.headers = "multipart/form-data"
@@ -46,7 +56,7 @@ export const createProduct = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       })
-      .then(({data}) => data)
+      .then(({ data }) => data)
       .catch(({ response }) => {
         console.log(response);
         return rejectWithValue(response.data);

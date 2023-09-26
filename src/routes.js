@@ -9,7 +9,7 @@ import Login from "./Pages/Login/index.js";
 import Orders from "./Pages/Orders/index.js";
 
 const AppRoutes = () => {
-  const routes = createHashRouter([
+  const routes = createBrowserRouter([
     {
       path: "/",
       element: <PageContent />,

@@ -168,7 +168,7 @@ const AddCategory = () => {
               listType="picture-circle"
               className="avatar-uploader"
               showUploadList={false}
-              action="http://localhost:5000/api/v1/categories/addPhoto"
+              action="https://be-dashboard.onrender.com/api/v1/categories/addPhoto"
               beforeUpload={beforeUpload}
               onChange={handleChange}
             >

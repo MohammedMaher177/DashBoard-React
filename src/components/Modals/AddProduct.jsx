@@ -18,6 +18,7 @@ import SelectItems from "../Inputs/MultiSelect.jsx";
 import { getCategoryNames } from "../../store/slices/categoriesSlice/CategoriesActions.js";
 
 const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
+  const dispatch = useDispatch();
   const { names } = useSelector(({ categories }) => categories);
   const { error, loading, msg } = useSelector(({ products }) => products);
   const [open, setOpen] = useState(false);
@@ -56,9 +57,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
   })
   
   const handleOk = async () => {
-    console.log(productData);
-    console.log(formik);
-    // setConfirmLoading(true);
+    setConfirmLoading(true);
     setFormData();
     const { payload } = await dispatch(createProduct(formData));
     setConfirmLoading(false);
@@ -82,7 +81,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
     validationSchema,
   });
 
-  const dispatch = useDispatch();
+
 
   const showModal = () => {
     setOpen(true);
@@ -236,7 +235,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
                   type="primary"
                   htmlType="submit"
                   loading={confirmLoading}
-                  onClick={handleOk}
+                  // onClick={handleOk}
                   disabled={!(formik.isValid && formik.dirty)}
                 >
                   Submit

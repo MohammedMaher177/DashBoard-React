@@ -38,6 +38,7 @@ const Login = () => {
       console.error(error);
     }
   };
+  console.log(555);
   useEffect(() => {
     handleNavigate();
   }, [message]);

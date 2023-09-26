@@ -25,11 +25,11 @@ export const deleteProduct = createAsyncThunk(
     console.log(productId);
     return await axiosFetching
       .delete(apiEndpoints.products.byId(productId))
-      .then(({data}) => {
+      .then(({ data }) => {
         console.log(data);
         return data;
       })
-      .catch(({response}) => {
+      .catch(({ response }) => {
         console.log(response);
         return rejectWithValue(response);
       });

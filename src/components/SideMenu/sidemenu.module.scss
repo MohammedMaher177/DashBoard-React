@@ -18,8 +18,12 @@ $color: #fff;
 
         .menuitem{
             box-shadow: 1px 1px 1px  #fff;
-           
         }
     }
     
+}
+@media screen and (max-width : 386px) {
+    .sidemenu{
+        width: 100% !important;
+    }
 }

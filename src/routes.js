@@ -1,23 +1,30 @@
-import {Route, Routes} from 'react-router-dom'
-import Dashboard from './Pages/Dashboard'
-import Login from './Pages/Login'
-import AllCategories from './Pages/Categories/AllCategories'
-import CrudCategory from './Pages/Categories/CrudCategory'
-import AllProducts from './Pages/Products/AllProducts'
-import CrudProducts from './Pages/Products/CrudProducts'
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Dashboard from "./Pages/Dashboard";
+import AllCategories from "./Pages/Categories/AllCategories";
+import AllProducts from "./Pages/Products/AllProducts";
+import MainLayout from "./components/MainLayout/MainLayout.jsx";
+import PageContent from "./components/PageContent/index.js";
+import Main from "./components/Main/Main.jsx";
+import Login from "./Pages/Login/index.js";
+import Orders from "./Pages/Orders/index.js";
 
-const AppRoutes=()=>{
-    return(
-            <Routes>
-                <Route path="/" element={<Login />}></Route>
-                <Route path="/dashboard" element={<Dashboard />}></Route>
-                <Route path="/categories" element={<AllCategories />}></Route>
-                <Route path="/update-category/:id" element={<CrudCategory />}></Route>
-                <Route path="/add-category" element={<CrudCategory />}></Route>
-                <Route path="/allproducts" element={<AllProducts />}></Route>
-                <Route path="/update-product/:id" element={<CrudProducts />}></Route>
-                <Route path="/add-product" element={<CrudProducts />}></Route>
-            </Routes>
-    )
-}
-export default AppRoutes
+const AppRoutes = () => {
+  const routes = createBrowserRouter([
+    {
+      path: "/",
+      element: <PageContent />,
+      children: [
+        { index: true, element: <Main /> },
+        { path: "/dashboard", element: <Main /> },
+        { path: "/categories", element: <AllCategories /> },
+        { path: "/allproducts", element: <AllProducts /> },
+        { path: "/orders", element: <Orders /> },
+        { path: "/login", element: <Login /> },
+      ],
+    },
+  ]);
+  return (
+    <RouterProvider router={routes} />
+  );
+};
+export default AppRoutes;

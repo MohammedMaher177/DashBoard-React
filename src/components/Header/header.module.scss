@@ -2,6 +2,8 @@ $color: RGB(21 14 28);
 .header{
     height: 66px;
     display: flex;
+    // position: fixed;
+    z-index: 999;
     justify-content: space-between;
     align-items: center;
     padding: 4px 20px 4px 12px;
@@ -21,7 +23,6 @@ $color: RGB(21 14 28);
 
   @media (max-width:768px){
     .header{
-      
       .title{
         justify-content: center;
         align-items: center;

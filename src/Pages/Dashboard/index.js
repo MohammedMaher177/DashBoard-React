@@ -1,13 +1,6 @@
 import { Typography, Space, Card, Statistic } from "antd"
 import {ShoppingCartOutlined, DollarCircleOutlined, UserOutlined, ShoppingOutlined} from "@ant-design/icons"
-import { useNavigate } from "react-router-dom"
-import { useEffect } from "react";
 const Dashboard = () => {
-  const navigate=useNavigate();
-
-  useEffect(()=>{
-  navigate('/allproducts')
-  },[navigate])
 
   return (
     <div>

@@ -1,22 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "bootstrap/dist/css/bootstrap.min.css"
-import 'bootstrap/dist/js/bootstrap.bundle.js'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.js";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import Store from "./store/Store";
+import { MaterialUIControllerProvider } from "./context/index.js";
+import { ThemeProvider } from "styled-components";
+import theme from "./assets/theme/index.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={Store}>
-    <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>
+    <MaterialUIControllerProvider>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+    </MaterialUIControllerProvider>
   </Provider>
 );
 

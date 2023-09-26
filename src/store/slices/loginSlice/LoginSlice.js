@@ -13,6 +13,7 @@ const initialState={
     reducers: {
       logout : (state)=>{
         state.message = null
+        localStorage.removeItem("access-token")
       }
     },
     extraReducers: (builder) => {

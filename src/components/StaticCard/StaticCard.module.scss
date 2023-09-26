@@ -1,0 +1,27 @@
+.icon{
+    font-size: calc(1.375rem + 1.2vw)!important;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, 0%);
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+.card_container{
+    // display: flex;
+    padding: 25px;
+    max-width: 500px !important;
+    min-width: 200px !important;
+}
+.count{
+    font-size: 1.5rem;
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+@media screen and (max-width : 486px) {
+    .count, .icon{
+        font-size: 1rem;
+    }
+}

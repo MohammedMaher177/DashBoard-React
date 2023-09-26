@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:where(.css-dev-only-do-not-override-i0102m).ant-card .ant-card-head-title {
+  display: flex !important;
+  justify-content: flex-end !important;
+}/*# sourceMappingURL=StaticCard.module.css.map */

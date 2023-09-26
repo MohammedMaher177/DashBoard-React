@@ -1,11 +1,9 @@
 import React from 'react';
 import { Menu, Image } from 'antd';
-import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, LogoutOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import styles from './sidemenu.module.css';
 // import logo from "/assets"
-
-const { SubMenu } = Menu;
 
 const SideMenu = () => {
   function getItem(label, key, icon, children) {
@@ -25,6 +23,8 @@ const SideMenu = () => {
       getItem("Categories", "/categories", <ShopOutlined />, null),
     ]),
     getItem("Log Out", "/", <LogoutOutlined />, null),
+    getItem("log in", "/login", <LoginOutlined />, null),
+    getItem("Orders", "/orders", <LoginOutlined />, null),
   ];
   const navigate = useNavigate();
 

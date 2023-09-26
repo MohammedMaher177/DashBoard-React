@@ -4,4 +4,10 @@
   align-items: center;
   justify-content: center;
   background-color: #fff;
+}
+
+@media screen and (max-width: 386px) {
+  .sider {
+    width: 100% !important;
+  }
 }/*# sourceMappingURL=pagecontent.module.css.map */

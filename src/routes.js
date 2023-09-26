@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, createHashRouter } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import AllCategories from "./Pages/Categories/AllCategories";
 import AllProducts from "./Pages/Products/AllProducts";

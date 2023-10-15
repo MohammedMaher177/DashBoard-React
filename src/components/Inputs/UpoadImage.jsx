@@ -1,7 +1,7 @@
 import { Upload } from "antd";
 import { useState } from "react";
 
-const UploadImageComp = ({ setproductData, image }) => {
+const UploadImageComp = ({ setproductData, image, setFieldValue }) => {
   const [defaultFileList, setDefaultFileList] = useState(null);
   const [imageUrl, setImageUrl] = useState();
 
@@ -15,7 +15,7 @@ const UploadImageComp = ({ setproductData, image }) => {
   };
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
+    reader.addEventListener("load", () => callback(reader.result));
     reader.readAsDataURL(img);
   };
 
@@ -24,12 +24,14 @@ const UploadImageComp = ({ setproductData, image }) => {
     getBase64(file.originFileObj, (url) => {
       // setLoading(false);
       setImageUrl(url);
-  })
-};
+    });
+    setFieldValue("logo", file)
+  };
 
   return (
     <div className="container">
       <Upload
+      
         accept="image/*"
         customRequest={uploadImage}
         onChange={handleOnChange}
@@ -46,7 +48,7 @@ const UploadImageComp = ({ setproductData, image }) => {
           <img
             src={imageUrl || image}
             alt="Image_Cover"
-            style={{width: "100%", borderRadius: "50%", height: "100%" }}
+            style={{ width: "100%", borderRadius: "50%", height: "100%" }}
           />
         ) : (
           <div>Upload Button</div>

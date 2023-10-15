@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu, Image } from 'antd';
-import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ShopOutlined, LineChartOutlined, ShoppingCartOutlined, LogoutOutlined, LoginOutlined, ShoppingOutlined, DragOutlined, PieChartOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import styles from './sidemenu.module.css';
 // import logo from "/assets"
@@ -20,11 +20,15 @@ const SideMenu = () => {
       getItem("All Products", "/allproducts", null, null),
     ]),
     getItem("Categories", "categories", <AppstoreOutlined />, [
-      getItem("Categories", "/categories", <ShopOutlined />, null),
+      getItem("Categories", "/categories", <ShoppingOutlined />, null),
     ]),
+    getItem("Orders", "/orders", <ShopOutlined />, null),
+    getItem("Calendar", "/calendar", <ShopOutlined />, null),
+    getItem("Line Chart", "/LineChart", <LineChartOutlined />, null),
+    getItem("Stacked", "/stacked", <DragOutlined />, null),
+    getItem("Pie", "/pie", <PieChartOutlined />, null),
     getItem("Log Out", "/", <LogoutOutlined />, null),
     getItem("log in", "/login", <LoginOutlined />, null),
-    getItem("Orders", "/orders", <LoginOutlined />, null),
   ];
   const navigate = useNavigate();
 

@@ -1,3 +1,5 @@
+@import url('https://cdn.syncfusion.com/ej2/material.css');
+
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Poppins:wght@300;400;500&display=swap');
  .App{
   padding: 0 0 30px 0;

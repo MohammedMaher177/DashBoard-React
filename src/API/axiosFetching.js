@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 
 const axiosFetching = axios.create({
   baseURL: "https://be-dashboard.onrender.com/api/v1",
+  // baseURL: "http://localhost:5000/api/v1",
 });
 
 axiosFetching.interceptors.request.use(

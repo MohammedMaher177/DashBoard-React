@@ -9,6 +9,7 @@ import { Col, Row } from "antd";
 import ReportsBarChart from "../ReportsBarChart/index.js";
 import MDBox from "../MDBox/index.js";
 import ReportsLineChart from "../ReportsLineChart/index.js";
+import Updates from "../Updates/Updates.jsx";
 
 function Main() {
   const sales = {
@@ -77,7 +78,7 @@ function Main() {
             count="+91"
             percentage={{
               color: "success",
-              amount: "55%5",
+              // amount: "55%5",
               label: "Just updated",
             }}
           />
@@ -130,6 +131,9 @@ function Main() {
         <Col span={12}></Col>
         <Col span={12}></Col>
       </Row>
+      {/* <Row align="center"> */}
+        <Updates />
+      {/* </Row> */}
     </>
   );
 }

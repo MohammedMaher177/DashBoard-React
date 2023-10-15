@@ -12,13 +12,14 @@ import {
   notification,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct } from "../../store/slices/productsSlice/ProductsActions.js";
+import { createProduct, updateProduct } from "../../store/slices/productsSlice/ProductsActions.js";
 import UploadImageComp from "../Inputs/UpoadImage.jsx";
 import SelectItems from "../Inputs/MultiSelect.jsx";
 import { getCategoryNames } from "../../store/slices/categoriesSlice/CategoriesActions.js";
 
 const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
   const dispatch = useDispatch();
+  const formData = new FormData();
   const { names } = useSelector(({ categories }) => categories);
   const { error, loading, msg } = useSelector(({ products }) => products);
   const [open, setOpen] = useState(false);
@@ -38,13 +39,13 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
   });
 
   const setFormData = () => {
-    formData.append("name", productData.name);
-    formData.append("description", productData.description);
-    formData.append("logo", productData.logo);
-    formData.append("colors[]", JSON.stringify(productData.colors));
-    formData.append("category", productData.category);
-    formData.append("totalAmount", productData.totalAmount);
-    formData.append("price", productData.price);
+    formData.append("name", productData?.name);
+    formData.append("description", productData?.description);
+    formData.append("logo", productData?.logo);
+    formData.append("colors[]", JSON.stringify(productData?.colors));
+    formData.append("category", productData?.category);
+    formData.append("totalAmount", productData?.totalAmount);
+    formData.append("price", productData?.price);
   };
 
   const validationSchema = Yup.object({
@@ -52,21 +53,22 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
     description: Yup.string().required(),
     price: Yup.number().required(),
     totalAmount: Yup.number().required(),
-    colors : Yup.array(),
+    colors: Yup.array(),
     category: Yup.string(),
-  })
-  
+  });
+
   const handleOk = async () => {
     setConfirmLoading(true);
     setFormData();
-    const { payload } = await dispatch(createProduct(formData));
+    console.log(formData.get("logo"));
+    const  {payload, type}  = await dispatch(Doc ? updateProduct({id: Doc._id, updatedData:formData}) : createProduct(formData));
+    console.log(payload, type);
     setConfirmLoading(false);
-    console.log(payload);
-    if (!(payload.error || payload.errors) && !loading["products/addProduct"]) {
-      setShow(false)
+    if (!(payload.error || payload.errors) && !loading[type]) {
+      setOpen(false);
     } else if (
       (payload.error || payload.errors) &&
-      !loading["products/addProduct"]
+      !loading[type]
     ) {
       notification.error({
         message: msg,
@@ -81,8 +83,6 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
     validationSchema,
   });
 
-
-
   const showModal = () => {
     setOpen(true);
   };
@@ -93,64 +93,63 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
       ...prevFormData,
       [e.target.name]: e.target.value,
     }));
-    formik.setValues(productData)
+    formik.setValues(productData);
   };
-
-  const formData = new FormData();
 
   const handleCancel = () => {
+    setproductData({
+      name: "",
+      description: "",
+      price: null,
+      logo: null,
+      totalAmount: null,
+      colors: [],
+      category: null,
+    });
     setOpen(false);
+    console.log(productData);
   };
-  const handleClose = () => {
-    if (msg === "success" && !error["products/addProduct"]) {
-      handleCancel();
-    } else if (error["products/addProduct"]) {
-      setShow(true);
-    }
-  };
-  const onFinishFailed = (e) => {
-    console.log(e);
-  };
+
   useEffect(() => {
     dispatch(getCategoryNames());
   }, []);
+
   return (
     <>
       <Button type="primary" key="addModal" icon={icon} onClick={showModal}>
         {Title}
       </Button>
-      {loading["categories/names"] ? (
-        "Loading"
-      ) : (
-        <Modal
-          title="Add new Product"
-          open={open}
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-          footer={null}
-          key="ModalBody"
-        >
-          <Divider orientation="center">
-            {error["product/addProduct"] && (
-              <Badge
-                count={show ? error["product/addProduct"] : 0}
-                orientation="center"
-                color="dark"
-              />
-            )}
-          </Divider>
-          <Form
-            onFinish={formik.handleSubmit}
-            style={{ width: "100%" }}
-          >
+      (
+      <Modal
+        title="Add new Product"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        footer={null}
+        key="ModalBody"
+        destroyOnClose={true}
+      >
+        <Divider orientation="center">
+          {error["product/addProduct"] && (
+            <Badge
+              count={show ? error["product/addProduct"] : 0}
+              orientation="center"
+              color="dark"
+            />
+          )}
+        </Divider>
+        {loading["categories/names"] ? (
+          <div>Loading</div>
+        ) : (
+          <Form onFinish={formik.handleSubmit} style={{ width: "100%" }}>
             <Space direction="vertical" size="middle" style={{ width: "100%" }}>
               <Form.Item rules={[{ max: 50, min: 5, required: true }]}>
                 <Space.Compact style={{ width: "100%" }}>
                   <Input
                     addonBefore="Name"
                     style={{ width: "100%" }}
-                    defaultValue={productData.name}
+                    defaultValue={productData?.name}
                     onChange={handleChange}
                     name="name"
                     required
@@ -163,7 +162,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
                     required
                     style={{ width: "100%" }}
                     name="description"
-                    defaultValue={productData.description}
+                    defaultValue={productData?.description}
                     addonBefore={"Desc"}
                     onChange={handleChange}
                   />
@@ -176,7 +175,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
                     style={{ width: "100%" }}
                     name="price"
                     type="number"
-                    defaultValue={productData.price}
+                    defaultValue={productData?.price}
                     addonBefore={"Price"}
                     onChange={handleChange}
                   />
@@ -189,7 +188,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
                     style={{ width: "100%" }}
                     name="totalAmount"
                     type="number"
-                    defaultValue={productData.totalAmount}
+                    defaultValue={productData?.totalAmount}
                     addonBefore={"Qty"}
                     onChange={handleChange}
                   />
@@ -198,7 +197,7 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
               <Form.Item rules={[{ required: true }]}>
                 <Space.Compact size="large" style={{ width: "100%" }}>
                   <SelectItems
-                  setFieldValue={formik.setFieldValue}
+                    setFieldValue={formik.setFieldValue}
                     multiple={true}
                     handleChange={handleChange}
                     setproductData={setproductData}
@@ -219,14 +218,15 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
                     setproductData={setproductData}
                     name="category"
                     options={[...names]}
-                    defaultValue={productData.category}
+                    defaultValue={productData?.category}
                   />
                 </Space.Compact>
               </Form.Item>
               <Form.Item rules={[{ required: true }]}>
                 <UploadImageComp
+                  setFieldValue={formik.setFieldValue}
                   setproductData={setproductData}
-                  image={productData.logo}
+                  image={productData?.logo}
                 />
               </Form.Item>
               <Space>
@@ -246,8 +246,9 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
               </Space>
             </Space>
           </Form>
-        </Modal>
-      )}
+        )}
+      </Modal>
+      )
     </>
   );
 };

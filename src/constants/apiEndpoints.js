@@ -8,6 +8,10 @@ export  const apiEndpoints ={
     products:{
         all: "/products",
         byId:(productId)=> `/products/${productId}`
+    },
+    orders:{
+        all: "/orders",
+        byId:(productId)=> `/orders/${productId}`
     }
 }
 

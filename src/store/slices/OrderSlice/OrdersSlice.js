@@ -1,10 +1,12 @@
-import { createSlice, isAnyOf, isAllOf } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { getRequestNameFromActionType } from "../../../utils";
-import { fetchCategories, fetchCategoryById, updateCategory, createCategory, deleteCategory, getCategoryNames } from "./CategoriesActions";
+import { fetchCategories, fetchCategoryById, updateCategory, createCategory, deleteCategory, getCategoryNames } from "./OrderActions";
 
 const initialState={
     categories:[],
     categoryById:{},
+    orders:[],
+    orderById:{},
     loading:{},
     error:{},
     msg:null,
@@ -12,16 +14,16 @@ const initialState={
 }
 
 const CategoriesSlice=createSlice({
-    name:"categories",
+    name:"orders",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
       builder
       .addCase(fetchCategories.pending, (state, action) => {
-        state.loading["categories/fetchCategories"] = true
+        state.loading["orders/fetchCategories"] = true
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.loading["categories/fetchCategories"] = false
+        state.loading["orders/fetchCategories"] = false
         state.categories = action.payload;
       })
       .addCase(fetchCategoryById.fulfilled, (state, action) => {
@@ -29,31 +31,31 @@ const CategoriesSlice=createSlice({
         state.categoryById = action.payload;
       })
       .addCase(deleteCategory.pending, (state, actions) => {
-        state.loading['categories/deleteCategory'] = true
+        state.loading['orders/deleteCategory'] = true
         state.msg = null
       })
       .addCase(deleteCategory.fulfilled, (state, {payload}) => {
         const {message, result} = payload
-        state.loading['categories/deleteCategory'] = false
-        state.error['categories/deleteCategory'] = null
+        state.loading['orders/deleteCategory'] = false
+        state.error['orders/deleteCategory'] = null
         state.msg = message
         state.categories= state.categories.filter(el => el._id !== result._id)
       })
       .addCase(deleteCategory.rejected, (state, actions) => {
         console.log(actions.payload);
-        state.loading['categories/deleteCategory'] = false
-        state.error['categories/deleteCategory'] = actions.payload.error
+        state.loading['orders/deleteCategory'] = false
+        state.error['orders/deleteCategory'] = actions.payload.error
         state.msg = actions.payload.message
       })
       .addCase(updateCategory.pending, (state, action) => {
-        state.loading['categories/updateCategory'] = true;
+        state.loading['orders/updateCategory'] = true;
         state.msg = null
-        state.error['categories/updateCategory'] = null
+        state.error['orders/updateCategory'] = null
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
         const {result, message , error} = action.payload
         state.msg = message
-        state.loading['categories/updateCategory'] = false;
+        state.loading['orders/updateCategory'] = false;
         if(message === "success"){
           state.categories.forEach((cat, i) => {
             if(cat?._id === result?._id){

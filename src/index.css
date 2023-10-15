@@ -16,3 +16,30 @@ code {
   display: flex !important;
   justify-content: flex-end !important;
 }/*# sourceMappingURL=StaticCard.module.css.map */
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.events .ant-badge-status {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notes-month {
+  font-size: 28px;
+  text-align: center;
+}
+.notes-month section {
+  font-size: 28px;
+}
+.ant-picker-panel{
+height: 80vh;
+overflow: auto;
+margin-bottom: 20px;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

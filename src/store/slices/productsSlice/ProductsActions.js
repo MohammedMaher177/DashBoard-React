@@ -41,7 +41,7 @@ export const updateProduct = createAsyncThunk(
   async ({ id, updatedData }) => {
     const endPoint = apiEndpoints.products.byId(id);
     const response = await axiosFetching.put(endPoint, updatedData);
-    return response.data.data;
+    return response.data.result;
   }
 );
 
@@ -56,7 +56,10 @@ export const createProduct = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       })
-      .then(({ data }) => data)
+      .then(({ data }) => {
+        console.log(data);
+        return data
+      })
       .catch(({ response }) => {
         console.log(response);
         return rejectWithValue(response.data);

@@ -24,16 +24,27 @@ const ProductsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    .addCase(fetchProducts.pending, (state, action)=>{
+      state.loading["products/fetchProducts"] = true
+    })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.loading[getRequestNameFromActionType(action?.type)] = false;
+        state.loading["products/fetchProducts"] = false
         state.products = action.payload;
       })
       .addCase(fetchProductById.fulfilled, (state, action) => {
         state.loading[getRequestNameFromActionType(action?.type)] = false;
         state.productById = action.payload;
       })
+      .addCase(updateProduct.pending, (state, action) => {
+        state.loading["products/updateProduct"] = true;
+        notification.open({
+          message: "Loading.....",
+          icon: <LoadingOutlined />,
+        });
+      })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading["products/updateProduct"] = false;
+        console.log(action.payload);
         state.productById = action.payload;
       })
       .addCase(createProduct.pending, (state, action) => {

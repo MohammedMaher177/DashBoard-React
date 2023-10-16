@@ -116,10 +116,10 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
 
   return (
     <>
-      <Button type="primary" key="addModal" icon={icon} onClick={showModal}>
+      <Button type="dashed" key="addModal" icon={icon} onClick={showModal}>
         {Title}
       </Button>
-      (
+      
       <Modal
         title="Add new Product"
         open={open}
@@ -248,8 +248,10 @@ const AddProduct = ({ Doc, Title = "Add Product", icon }) => {
           </Form>
         )}
       </Modal>
-      )
+      
     </>
   );
 };
 export default AddProduct;
+
+//className={Title.includes("Add") && "mb-2"}

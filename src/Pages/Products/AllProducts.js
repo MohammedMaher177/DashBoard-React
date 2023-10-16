@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import {Typography,Table,Pagination} from "antd";
+import { Typography, Table, Pagination } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {fetchProducts,deleteProduct,} from "../../store/slices/productsSlice/ProductsActions";
+import {
+  fetchProducts,
+  deleteProduct,
+} from "../../store/slices/productsSlice/ProductsActions";
 import AddProduct from "../../components/Modals/AddProduct.jsx";
-import {GetColumnSearchProps, getProductData } from "../../components/SearchComp/SearchComp.jsx";
+import {
+  GetColumnSearchProps,
+  getProductData,
+} from "../../components/SearchComp/SearchComp.jsx";
 
 const AllProducts = () => {
   const { products, loading } = useSelector(({ products }) => products);
@@ -29,13 +35,12 @@ const AllProducts = () => {
 
   const handleEdit = (id) => {
     console.log(id);
-    <AddProduct />
+    <AddProduct />;
   };
 
   const handleDelete = async (productId) => {
-    dispatch(deleteProduct(productId))
+    dispatch(deleteProduct(productId));
   };
-
 
   const columns = getProductData(
     searchInput,
@@ -48,7 +53,6 @@ const AllProducts = () => {
     handleEdit,
     handleDelete
   );
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 3;
@@ -80,8 +84,8 @@ const AllProducts = () => {
       <Typography.Title level={4}>All Products</Typography.Title>
       <AddProduct />
       <Table
-      // virtual scroll={{ x: 200, y: 500 }} 
-      rowKey="_id"
+        // virtual scroll={{ x: 200, y: 500 }}
+        rowKey="_id"
         dataSource={paginatedProducts}
         columns={columns}
         loading={
@@ -91,6 +95,7 @@ const AllProducts = () => {
           loading["products/addProduct"]
         }
         pagination={false}
+        className="my-2 overflow-x-auto me-2"
       />
       <br />
       <Pagination
